@@ -2,6 +2,7 @@ package game.actor;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import game.util.MathHelper;
 
 public abstract class Actor {
     public double x, y, w, h;
@@ -10,7 +11,7 @@ public abstract class Actor {
     public boolean up, down, left, right;
     
     // Horizontal movement variables
-    private double xRotation = Math.PI / 2; // Initial 90 degrees - No horizontal movement.
+    private double xRotation = MathHelper.PiOver2; // Initial 90 degrees - No horizontal movement.
     private double xRotationSpeed = (Math.PI / 180) * 6;
     private double xSpeed = 10;
     
@@ -49,15 +50,15 @@ public abstract class Actor {
         
         if(!left && !right) {
             // Rotate towards 90 to stop left/right movement.
-            if(this.xRotation > Math.PI / 2) { this.xRotation -= this.xRotationSpeed; }
-            if(this.xRotation < Math.PI / 2) { this.xRotation += this.xRotationSpeed; }
+            if(this.xRotation > MathHelper.PiOver2) { this.xRotation -= this.xRotationSpeed; }
+            if(this.xRotation < MathHelper.PiOver2) { this.xRotation += this.xRotationSpeed; }
             
             /*
             We'll always get within the rotationSpeed radians to PI / 2, but never hit it exactly.
             If we get within that threshold, then set rotation to PI / 2.
             */
-            if(this.xRotation <= ((Math.PI / 2) + this.xRotationSpeed) && this.xRotation >= ((Math.PI / 2) - this.xRotationSpeed)) {
-                this.xRotation = Math.PI / 2;
+            if(this.xRotation <= (MathHelper.PiOver2 + this.xRotationSpeed) && this.xRotation >= (MathHelper.PiOver2 - this.xRotationSpeed)) {
+                this.xRotation = MathHelper.PiOver2;
             }
         }
         
@@ -65,11 +66,11 @@ public abstract class Actor {
         this.x += Math.cos(this.xRotation) * this.xSpeed;
         
         // Vertical movement
-        if(this.yRotation < 3 * (Math.PI / 2)) {
+        if(this.yRotation < MathHelper.ThreePiOver2) {
             this.yRotation += this.yRotationSpeed;
             
-            if(this.yRotation > 3 * (Math.PI / 2)) {
-                this.yRotation = 3 * (Math.PI / 2);
+            if(this.yRotation > MathHelper.ThreePiOver2) {
+                this.yRotation = MathHelper.ThreePiOver2;
             }
         }
         
@@ -87,7 +88,7 @@ public abstract class Actor {
     public void jump() {
         if(!this.jumping && this.yRotation == Math.PI) {
             this.jumping = true;
-            this.yRotation = Math.PI / 2;
+            this.yRotation = MathHelper.PiOver2;
         }
     }
     
