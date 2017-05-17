@@ -29,6 +29,7 @@ public class Window extends JFrame {
     
     private static Font FONT_TITLE;
     private static Font FONT_BASIC;
+    private static Font FONT_MONOSPACED;
     
     static {
         try {
@@ -89,6 +90,8 @@ public class Window extends JFrame {
         f = Font.createFont(Font.TRUETYPE_FONT, Window.class.getClassLoader().getResourceAsStream("fonts/advent-Bd1.otf"));
         Window.graphicsEnvironment.registerFont(f);
         FONT_BASIC = new Font(f.getFontName(), Font.PLAIN, 20);
+        
+        FONT_MONOSPACED = new Font("Monospaced", Font.PLAIN, 20);
     }
     
     private static class MPanel extends JPanel {
@@ -107,7 +110,7 @@ public class Window extends JFrame {
             Graphics2D g = canvas.createGraphics();
             
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            //g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
             // Clear.
             g.setBackground(Color.WHITE);
@@ -116,14 +119,13 @@ public class Window extends JFrame {
             // Draw game.
             Game.draw(g);
             
-            // Draw stats overlay.
+            // Draw diagnostics overlay.
             g.setColor(Color.BLACK);
-            g.setFont(FONT_BASIC);
+            g.setFont(FONT_MONOSPACED);
             g.drawString("Simulation", 5, 20);
-            g.drawString("fps: " + Game.FPS, 5, 50);
-            g.drawString("render count: " + (Game.CAMERA != null ? Game.CAMERA.renderCount : 0), 5, 80);
-            g.drawString(this.getBounds().toString(), 5, 110);
-            g.drawString(this.canvas.getWidth() + ", " + this.canvas.getHeight(), 5, 140);
+            g.drawString("fps: " + Game.FPS, 5, 40);
+            g.drawString("render count: " + (Game.CAMERA != null ? Game.CAMERA.renderCount : 0), 5, 60);
+            g.drawString("viewport: " + this.getBounds().width + ", " + this.getBounds().height, 5, 80);
             
             // Draw title.
             g.setColor(Color.BLACK);
@@ -151,8 +153,8 @@ public class Window extends JFrame {
             But the user could just make the window wider.
             Then the canvas height would be too large and go outside of the window.
             It's a lot of trouble to keep the canvas fully inside the window AND maintain the original
-            aspect ratio of the canvas. But I've decided I would rather squish the canvas to whatever
-            size the user wants to make the window. For now, I'm okay with graphical artifacts.
+            aspect ratio of the canvas. For now, I've decided I would rather squish the canvas to whatever
+            size the user wants to make the window.
             */
             graphics.drawImage(canvas, 0, 0, this.getBounds().width, this.getBounds().height, null);
         }

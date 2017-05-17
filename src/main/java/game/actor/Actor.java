@@ -10,7 +10,7 @@ public abstract class Actor {
     public boolean up, down, left, right;
     private double rotation = Math.PI / 2; // Rotation in radians.
     private double rotationSpeed = (Math.PI / 180) * 6;
-    public double speed = 5;
+    public double speed = 10;
     
     public Actor(int x, int y, int w, int h) {
         this.x = x;
