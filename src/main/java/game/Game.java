@@ -50,8 +50,9 @@ public class Game {
     
     public static void start() throws Exception {
         // Create window.
-        int width = Window.SCREEN_WIDTH / 2;
-        WINDOW = new Window("sim", width);
+        int width = 1000;
+        int height = 600;
+        WINDOW = new Window("sim", width, height);
         
         // Set world size.
         WORLD_WIDTH = WINDOW.w * 10;
@@ -85,7 +86,7 @@ public class Game {
             }
         }
         
-        int playersize = (int)(WINDOW.w * .01);
+        int playersize = 10;
         PLAYER = new Player(0, 0, playersize, playersize);
         
         // Create camera.

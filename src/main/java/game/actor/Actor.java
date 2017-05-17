@@ -1,6 +1,5 @@
 package game.actor;
 
-import game.Game;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
@@ -9,10 +8,9 @@ public abstract class Actor {
     private Rectangle.Double rect = new Rectangle.Double();
     
     public boolean up, down, left, right;
-    private double scale = Game.WINDOW.w;
     private double rotation = Math.PI / 2; // Rotation in radians.
     private double rotationSpeed = (Math.PI / 180) * 6;
-    public double speed = scale * .01;
+    public double speed = 5;
     
     public Actor(int x, int y, int w, int h) {
         this.x = x;
@@ -67,11 +65,11 @@ public abstract class Actor {
     }
     
     public double getCenterX() {
-        return (this.x + this.w) - (this.w / 2);
+        return this.getRect().getCenterX();
     }
     
     public double getCenterY() {
-        return (this.y + this.h) - (this.h / 2);
+        return this.getRect().getCenterY();
     }
     
     public Rectangle.Double getRect() {

@@ -39,21 +39,38 @@ public class Window extends JFrame {
         }
     }
     
-    public Window(String title, int width) throws Exception {
+    /**
+     * Create the window with the given width and height.
+     * 
+     * The following comments are important with regard to graphics scaling.
+     * If we specify the window to have width 1000 and height 600, the JFrame (window)
+     * will be created at that size including its borders, title, etc. Inside the window
+     * we will have a viewable area (the content pane) where we will create our drawing surface (canvas).
+     * The content pane will be a little smaller than the window size. It is important to create
+     * the canvas using the size of the content pane area, not the window size, otherwise
+     * the canvas will be slightly scaled down to fit into the content pane of the window.
+     * Due to the scaling down to a non integer ratio of the original size, there will be graphical
+     * artifacts. For example, imagine 2 pixels scaled up to fit into 3 pixels, the final image will
+     * obviously not look exactly like the original. Worse, this appears as pixel "flickering" as objects
+     * move around the screen.
+     */
+    public Window(String title, int width, int height) throws Exception {
         super(title);
         
         this.w = width;
-        this.h = (int)(w * ((double)SCREEN_HEIGHT / SCREEN_WIDTH)); // Maintain aspect ratio of screen so it looks good if window is maximized.
+        this.h = height;
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(w, h);
         this.setLocation((SCREEN_WIDTH / 2) - (w / 2), (SCREEN_HEIGHT / 2) - (h / 2));
         this.setIconImage(ImageIO.read(Window.class.getClassLoader().getResourceAsStream("images/gameicon.png")));
         
-        // Create drawing surface.
-        this.panel = new MPanel(w, h);
-        this.add(panel);
+        // The window must be visible before creating the canvas in order to get the window's content pane size.
         this.setVisible(true);
+        
+        // Create drawing surface (canvas).
+        this.panel = new MPanel(this.getContentPane().getWidth(), this.getContentPane().getHeight());
+        this.add(panel);
         
         // Register event listeners.
         this.registerKeyboardListener();
@@ -105,16 +122,38 @@ public class Window extends JFrame {
             g.drawString("Simulation", 5, 20);
             g.drawString("fps: " + Game.FPS, 5, 50);
             g.drawString("render count: " + (Game.CAMERA != null ? Game.CAMERA.renderCount : 0), 5, 80);
+            g.drawString(this.getBounds().toString(), 5, 110);
+            g.drawString(this.canvas.getWidth() + ", " + this.canvas.getHeight(), 5, 140);
             
             // Draw title.
             g.setColor(Color.BLACK);
             g.setFont(FONT_TITLE);
             String title = "Simulation";
             Rectangle2D r = g.getFontMetrics().getStringBounds(title, g);
-            ///g.drawString(title, (this.canvas.getWidth() / 2) - ((int)r.getWidth() / 2), (this.canvas.getHeight() / 2) - ((int)r.getHeight() / 2));
+            //g.drawString(title, (this.canvas.getWidth() / 2) - ((int)r.getWidth() / 2), (this.canvas.getHeight() / 2) - ((int)r.getHeight() / 2));
             
             g.dispose();
             
+            /*
+            Scale the image to fit the window. At the default window size, the
+            canvas will be displayed at original size. But the user can resize the window.
+            It is possible to resize the canvas so that its size remains an integer
+            ratio of its original size: the integer division of the window width / original canvas width
+            is the scale factor to multiply the new canvas width and height by. For example,
+            
+            Window width: 2500
+            Original canvas width: 1000
+            2500 / 1000 = 2.5 -> integer division = scale factor 2
+            
+            The width and height of the canvas would be multiplied by 2, giving it an integer
+            ratio of its original size and maintaining the aspect ratio.
+            
+            But the user could just make the window wider.
+            Then the canvas height would be too large and go outside of the window.
+            It's a lot of trouble to keep the canvas fully inside the window AND maintain the original
+            aspect ratio of the canvas. But I've decided I would rather squish the canvas to whatever
+            size the user wants to make the window. For now, I'm okay with graphical artifacts.
+            */
             graphics.drawImage(canvas, 0, 0, this.getBounds().width, this.getBounds().height, null);
         }
     }
