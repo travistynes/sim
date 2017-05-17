@@ -8,9 +8,17 @@ public abstract class Actor {
     private Rectangle.Double rect = new Rectangle.Double();
     
     public boolean up, down, left, right;
-    private double rotation = Math.PI / 2; // Rotation in radians.
-    private double rotationSpeed = (Math.PI / 180) * 6;
-    public double speed = 10;
+    
+    // Horizontal movement variables
+    private double xRotation = Math.PI / 2; // Initial 90 degrees - No horizontal movement.
+    private double xRotationSpeed = (Math.PI / 180) * 6;
+    private double xSpeed = 10;
+    
+    // Vertical movement variables
+    private double yRotation = Math.PI; // Initial 180 degress - No vertical movement.
+    private double yRotationSpeed = (Math.PI / 180) * 6;
+    private double ySpeed = 15;
+    private boolean jumping = false;
     
     public Actor(int x, int y, int w, int h) {
         this.x = x;
@@ -28,40 +36,59 @@ public abstract class Actor {
     }
     
     private void move() {
-        if(up) {
-            this.y -= this.speed;
-        }
-        
-        if(down) {
-            this.y += this.speed;
-        }
-        
+        // Horizontal movement
         if(left) {
-            this.rotation += this.rotationSpeed;
-            if(this.rotation > Math.PI) { this.rotation = Math.PI; }
+            this.xRotation += this.xRotationSpeed;
+            if(this.xRotation > Math.PI) { this.xRotation = Math.PI; }
         }
         
         if(right) {
-            this.rotation -= this.rotationSpeed;
-            if(this.rotation < 0) { this.rotation = 0; }
+            this.xRotation -= this.xRotationSpeed;
+            if(this.xRotation < 0) { this.xRotation = 0; }
         }
         
         if(!left && !right) {
             // Rotate towards 90 to stop left/right movement.
-            if(this.rotation > Math.PI / 2) { this.rotation -= this.rotationSpeed; }
-            if(this.rotation < Math.PI / 2) { this.rotation += this.rotationSpeed; }
+            if(this.xRotation > Math.PI / 2) { this.xRotation -= this.xRotationSpeed; }
+            if(this.xRotation < Math.PI / 2) { this.xRotation += this.xRotationSpeed; }
             
             /*
             We'll always get within the rotationSpeed radians to PI / 2, but never hit it exactly.
             If we get within that threshold, then set rotation to PI / 2.
             */
-            if(this.rotation <= ((Math.PI / 2) + this.rotationSpeed) && this.rotation >= ((Math.PI / 2) - this.rotationSpeed)) {
-                this.rotation = Math.PI / 2;
+            if(this.xRotation <= ((Math.PI / 2) + this.xRotationSpeed) && this.xRotation >= ((Math.PI / 2) - this.xRotationSpeed)) {
+                this.xRotation = Math.PI / 2;
             }
         }
         
-        // Move.
-        this.x += Math.cos(this.rotation) * this.speed;
+        // Move on x.
+        this.x += Math.cos(this.xRotation) * this.xSpeed;
+        
+        // Vertical movement
+        if(this.yRotation < 3 * (Math.PI / 2)) {
+            this.yRotation += this.yRotationSpeed;
+            
+            if(this.yRotation > 3 * (Math.PI / 2)) {
+                this.yRotation = 3 * (Math.PI / 2);
+            }
+        }
+        
+        // Move on y.
+        this.y -= Math.sin(this.yRotation) * this.ySpeed;
+        
+        // Check for ground collision.
+        if(this.y > 400) {
+            this.y = 400;
+            this.yRotation = Math.PI;
+            this.jumping = false;
+        }
+    }
+    
+    public void jump() {
+        if(!this.jumping && this.yRotation == Math.PI) {
+            this.jumping = true;
+            this.yRotation = Math.PI / 2;
+        }
     }
     
     public double getCenterX() {

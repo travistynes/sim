@@ -30,9 +30,9 @@ public class Player extends Actor {
         } else if(ke.getKeyCode() == KeyEvent.VK_D) {
             this.right = true;
         } else if(ke.getKeyCode() == KeyEvent.VK_W) {
-            this.up = true;
+            this.jump();
         } else if(ke.getKeyCode() == KeyEvent.VK_S) {
-            this.down = true;
+            
         }
     }
     
@@ -42,9 +42,9 @@ public class Player extends Actor {
         } else if(ke.getKeyCode() == KeyEvent.VK_D) {
             this.right = false;
         } else if(ke.getKeyCode() == KeyEvent.VK_W) {
-            this.up = false;
+            
         } else if(ke.getKeyCode() == KeyEvent.VK_S) {
-            this.down = false;
+            
         }
     }
 }
