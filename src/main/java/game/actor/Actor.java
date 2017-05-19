@@ -137,9 +137,13 @@ public abstract class Actor {
         // If there was a collision with a wall, reset position.
         for(Line2D line : Game.WALLS) {
             if(line.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
+                if(curY < this.y) {
+                    // Ground collision.
+                    this.jumping = false;
+                }
+                
                 this.y = curY;
                 this.yRotation = Math.PI;
-                this.jumping = false;
                 
                 break;
             }
