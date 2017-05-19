@@ -99,11 +99,11 @@ public abstract class Actor {
                     // Angle is too steep to climb.
                     this.xRotation = MathHelper.PiOver2; // Reset horizontal momentum.
                 } else {
-                    // Move in x, y with respect to the angle of the line.
+                    // Move in x, y with respect to the angle of the line, and by a factor of the current horizontal momentum.
                     this.x += Math.cos(theta) * Math.cos(this.xRotation) * this.xSpeed;
                     this.y -= Math.sin(theta) * Math.cos(this.xRotation) * this.xSpeed;
 
-                    // Check for *another* wall collision.
+                    // Check for *another* wall collision after the above movement.
                     for(Line2D line1 : Game.WALLS) {
                         if(line1.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
                             // Reset position.
