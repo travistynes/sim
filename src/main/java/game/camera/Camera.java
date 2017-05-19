@@ -2,9 +2,11 @@ package game.camera;
 
 import game.Game;
 import game.actor.Actor;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Point;
+import java.awt.geom.Line2D;
 
 public class Camera extends Rectangle {
     private Actor target;
@@ -31,6 +33,20 @@ public class Camera extends Rectangle {
             }
             
             a.draw(g);
+            this.renderCount++;
+        }
+        
+        // Draw walls.
+        g.setColor(Color.BLACK);
+        for(Line2D line : Game.WALLS) {
+            if(!line.intersects(this)) {
+                continue;
+            }
+            
+            Point p1 = getRenderPosition(line.getX1(), line.getY1());
+            Point p2 = getRenderPosition(line.getX2(), line.getY2());
+            
+            g.drawLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
             this.renderCount++;
         }
         
@@ -71,10 +87,9 @@ public class Camera extends Rectangle {
     }
     
     /**
-     * A game object can call this to get it's proper render position on the screen
-     * relative to the camera.
+     * Get the position of a point as viewed through the camera.
      */
-    public Point getRenderPosition(Actor a) {
-        return new Point((int)(a.x - this.x), (int)(a.y - this.y));
+    public Point getRenderPosition(double x, double y) {
+        return new Point((int)(x - this.x), (int)(y - this.y));
     }
 }

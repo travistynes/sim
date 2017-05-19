@@ -1,8 +1,11 @@
 package game.actor;
 
+import game.Game;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import game.util.MathHelper;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 public abstract class Actor {
     public double x, y, w, h;
@@ -13,12 +16,12 @@ public abstract class Actor {
     // Horizontal movement variables
     private double xRotation = MathHelper.PiOver2; // Initial 90 degrees - No horizontal movement.
     private double xRotationSpeed = (Math.PI / 180) * 6;
-    private double xSpeed = 10;
+    private double xSpeed = 5;
     
     // Vertical movement variables
     private double yRotation = Math.PI; // Initial 180 degress - No vertical movement.
     private double yRotationSpeed = (Math.PI / 180) * 6;
-    private double ySpeed = 15;
+    private double ySpeed = 10;
     private boolean jumping = false;
     
     public Actor(int x, int y, int w, int h) {
@@ -37,6 +40,11 @@ public abstract class Actor {
     }
     
     private void move() {
+        // Get current position, prior to move.
+        Point2D p = new Point2D.Double(this.getCenterX(), this.getCenterY());
+        double curX = this.x;
+        double curY = this.y;
+        
         // Horizontal movement
         if(left) {
             this.xRotation += this.xRotationSpeed;
@@ -65,6 +73,14 @@ public abstract class Actor {
         // Move on x.
         this.x += Math.cos(this.xRotation) * this.xSpeed;
         
+        // If there was a collision with a wall, reset position.
+        for(Line2D line : Game.WALLS) {
+            if(line.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
+                this.x = curX;
+                break;
+            }
+        }
+        
         // Vertical movement
         if(this.yRotation < MathHelper.ThreePiOver2) {
             this.yRotation += this.yRotationSpeed;
@@ -77,11 +93,15 @@ public abstract class Actor {
         // Move on y.
         this.y -= Math.sin(this.yRotation) * this.ySpeed;
         
-        // Check for ground collision.
-        if(this.y > 400) {
-            this.y = 400;
-            this.yRotation = Math.PI;
-            this.jumping = false;
+        // If there was a collision with a wall, reset position.
+        for(Line2D line : Game.WALLS) {
+            if(line.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
+                this.y = curY;
+                this.yRotation = Math.PI;
+                this.jumping = false;
+                
+                break;
+            }
         }
     }
     

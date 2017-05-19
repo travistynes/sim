@@ -18,7 +18,7 @@ public class Player extends Actor {
     
     @Override
     public void draw(Graphics2D g) {
-        Point p = Game.CAMERA.getRenderPosition(this);
+        Point p = Game.CAMERA.getRenderPosition(this.x, this.y);
         
         g.setColor(Color.BLACK);
         g.drawOval(p.x, p.y, (int)Game.PLAYER.w, (int)Game.PLAYER.h);

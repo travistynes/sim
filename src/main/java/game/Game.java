@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Line2D;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class Game {
     public static Camera CAMERA;
     public static Player PLAYER;
     public static List<Actor> GOBS = new ArrayList<Actor>();
+    public static List<Line2D> WALLS = new ArrayList<Line2D>();
     
     public static final int TARGET_FPS = 60; // Target frames per second.
     public static final double TICK = 1000 / TARGET_FPS; // Tick duration in milliseconds needed to hit the target frame rate.
@@ -58,7 +60,7 @@ public class Game {
         WORLD_WIDTH = WINDOW.w * 10;
         WORLD_HEIGHT = WINDOW.h * 10;
         
-        // Create player and objects.
+        // Create background grid.
         int num = 50;
         for(int a = 0; a < num; a++) {
             for(int b = 0; b < num; b++) {
@@ -69,7 +71,7 @@ public class Game {
                 
                 GOBS.add(new Actor(x, y, w, h) {
                     public void draw(Graphics2D g) {
-                        Point p = Game.CAMERA.getRenderPosition(this);
+                        Point p = Game.CAMERA.getRenderPosition(this.x, this.y);
                         
                         g.setColor(new Color(1, 1, 1, 1f));
                         g.fillRect(p.x, p.y, (int)this.w, (int)this.h);
@@ -85,6 +87,11 @@ public class Game {
                 });
             }
         }
+        
+        // Create walls.
+        WALLS.add(new Line2D.Double(0, 410, WORLD_WIDTH, 410));
+        WALLS.add(new Line2D.Double(200, 0, 200, 400));
+        WALLS.add(new Line2D.Double(200, 390, 300, 390));
         
         int playersize = 10;
         PLAYER = new Player(0, 0, playersize, playersize);
