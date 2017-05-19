@@ -16,12 +16,12 @@ public abstract class Actor {
     // Horizontal movement variables
     private double xRotation = MathHelper.PiOver2; // Initial 90 degrees - No horizontal movement.
     private double xRotationSpeed = (Math.PI / 180) * 6;
-    private double xSpeed = 5;
+    private double xSpeed = 10;
     
     // Vertical movement variables
     private double yRotation = Math.PI; // Initial 180 degress - No vertical movement.
     private double yRotationSpeed = (Math.PI / 180) * 6;
-    private double ySpeed = 10;
+    private double ySpeed = 15;
     private boolean jumping = false;
     
     public Actor(int x, int y, int w, int h) {
@@ -73,10 +73,51 @@ public abstract class Actor {
         // Move on x.
         this.x += Math.cos(this.xRotation) * this.xSpeed;
         
-        // If there was a collision with a wall, reset position.
+        // Check for wall collision.
         for(Line2D line : Game.WALLS) {
             if(line.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
+                // Reset position.
                 this.x = curX;
+                
+                /*
+                Treat the line as though the left most point were at the origin so we can
+                get the angle of the line. If the left point is p1 and the right point is p2,
+                the formula is normally (x2 - x1, y2 - y1), but note for y we subtract y1 - y2
+                because y increases downward on our canvas.
+                */
+                Point2D p2 = null;
+                if(line.getX2() >= line.getX1()) {
+                    p2 = new Point2D.Double(line.getX2() - line.getX1(), line.getY1() - line.getY2());
+                } else {
+                    p2 = new Point2D.Double(line.getX1() - line.getX2(), line.getY2() - line.getY1());
+                }
+                
+                // Get the angle of the line.
+                double theta = Math.atan2(p2.getY(), p2.getX());
+                
+                if(Math.abs(theta) > 2 * MathHelper.PiOver6 && Math.abs(theta) < 4 * MathHelper.PiOver6) {
+                    // Angle is too steep to climb.
+                    this.xRotation = MathHelper.PiOver2; // Reset horizontal momentum.
+                } else {
+                    // Move in x, y with respect to the angle of the line.
+                    this.x += Math.cos(theta) * Math.cos(this.xRotation) * this.xSpeed;
+                    this.y -= Math.sin(theta) * Math.cos(this.xRotation) * this.xSpeed;
+
+                    // Check for *another* wall collision.
+                    for(Line2D line1 : Game.WALLS) {
+                        if(line1.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
+                            // Reset position.
+                            this.x = curX;
+                            this.y = curY;
+                            this.xRotation = MathHelper.PiOver2; // Reset horizontal momentum.
+                            break;
+                        }
+                    }
+
+                    // Update current y position for the upcoming vertical movement and collision check.
+                    curY = this.y;
+                }
+                
                 break;
             }
         }
