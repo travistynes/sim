@@ -92,7 +92,7 @@ public class Game {
         WALLS.add(new Line2D.Double(0, 410, WORLD_WIDTH, 410));
         WALLS.add(new Line2D.Double(400, 410, 200, 350));
         WALLS.add(new Line2D.Double(200, 410, 500, 350));
-        WALLS.add(new Line2D.Double(520, 390, 570, 50));
+        WALLS.add(new Line2D.Double(520, 390, 1070, 50));
         
         int playersize = 10;
         PLAYER = new Player(0, 0, playersize, playersize);

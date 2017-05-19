@@ -16,12 +16,12 @@ public abstract class Actor {
     // Horizontal movement variables
     private double xRotation = MathHelper.PiOver2; // Initial 90 degrees - No horizontal movement.
     private double xRotationSpeed = (Math.PI / 180) * 6;
-    private double xSpeed = 10;
+    private double xSpeed = 5;
     
     // Vertical movement variables
     private double yRotation = Math.PI; // Initial 180 degress - No vertical movement.
     private double yRotationSpeed = (Math.PI / 180) * 6;
-    private double ySpeed = 15;
+    private double ySpeed = 10;
     private boolean jumping = false;
     
     public Actor(int x, int y, int w, int h) {
@@ -147,7 +147,8 @@ public abstract class Actor {
     }
     
     public void jump() {
-        if(!this.jumping && this.yRotation == Math.PI) {
+        // Allow a jump if not currently jumping, and if not falling too fast yet.
+        if(!this.jumping && this.yRotation < Math.PI + (this.yRotationSpeed * 10)) {
             this.jumping = true;
             this.yRotation = MathHelper.PiOver2;
         }
