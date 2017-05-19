@@ -90,9 +90,16 @@ public class Game {
         
         // Create walls.
         WALLS.add(new Line2D.Double(0, 410, WORLD_WIDTH, 410));
+        
         WALLS.add(new Line2D.Double(400, 410, 200, 350));
         WALLS.add(new Line2D.Double(200, 410, 500, 350));
         WALLS.add(new Line2D.Double(520, 390, 1070, 50));
+        
+        WALLS.add(new Line2D.Double(800, 400, 850, 350));
+        WALLS.add(new Line2D.Double(850, 350, 900, 325));
+        WALLS.add(new Line2D.Double(900, 325, 950, 300));
+        WALLS.add(new Line2D.Double(950, 300, 1000, 350));
+        WALLS.add(new Line2D.Double(1000, 350, 1020, 410));
         
         int playersize = 10;
         PLAYER = new Player(0, 0, playersize, playersize);

@@ -152,7 +152,7 @@ public abstract class Actor {
     
     public void jump() {
         // Allow a jump if not currently jumping, and if not falling too fast yet.
-        if(!this.jumping && this.yRotation < Math.PI + (this.yRotationSpeed * 5)) {
+        if(!this.jumping && this.yRotation < Math.PI + (this.yRotationSpeed * 7)) {
             this.jumping = true;
             this.yRotation = MathHelper.PiOver2;
         }
