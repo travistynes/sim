@@ -89,17 +89,32 @@ public class Game {
         }
         
         // Create walls.
-        WALLS.add(new Line2D.Double(0, 410, WORLD_WIDTH, 410));
+        //WALLS.add(new Line2D.Double(0, 500, WORLD_WIDTH, 500));
         
-        WALLS.add(new Line2D.Double(400, 410, 200, 350));
-        WALLS.add(new Line2D.Double(200, 410, 500, 350));
-        WALLS.add(new Line2D.Double(520, 390, 1070, 50));
+        WALLS.add(new Line2D.Double(400, 500, 200, 450));
+        WALLS.add(new Line2D.Double(200, 500, 500, 450));
+        //WALLS.add(new Line2D.Double(520, 390, 1070, 50));
         
         WALLS.add(new Line2D.Double(800, 400, 850, 350));
-        WALLS.add(new Line2D.Double(850, 350, 900, 325));
-        WALLS.add(new Line2D.Double(900, 325, 950, 300));
+        WALLS.add(new Line2D.Double(850, 350, 900, 300));
+        WALLS.add(new Line2D.Double(900, 300, 950, 300));
         WALLS.add(new Line2D.Double(950, 300, 1000, 350));
-        WALLS.add(new Line2D.Double(1000, 350, 1020, 410));
+        WALLS.add(new Line2D.Double(1000, 350, 1030, 410));
+        
+        int prevX = 0;
+        int prevY = 500;
+        for(int a = 0; a < 100; a++) {
+            int x1 = Game.ran(70) + 10 + prevX;
+            int y1 = Game.ran(40);
+            double s = Game.ran();
+            if(s <= .5) { y1 = -y1; } // Negative
+            y1 += prevY;
+            
+            WALLS.add(new Line2D.Double(prevX, prevY, x1, y1));
+            
+            prevX = x1;
+            prevY = y1;
+        }
         
         int playersize = 10;
         PLAYER = new Player(0, 0, playersize, playersize);

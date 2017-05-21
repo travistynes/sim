@@ -126,6 +126,7 @@ public class Window extends JFrame {
             g.drawString("fps: " + Game.FPS, 5, 40);
             g.drawString("render count: " + (Game.CAMERA != null ? Game.CAMERA.renderCount : 0), 5, 60);
             g.drawString("viewport: " + this.getBounds().width + ", " + this.getBounds().height, 5, 80);
+            g.drawString("position: " + Game.PLAYER.x + ", " + Game.PLAYER.y, 5, 100);
             
             // Draw title.
             g.setColor(Color.BLACK);
