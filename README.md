@@ -1,6 +1,6 @@
 # Sim
 
-Foundation for games or simulations that provides a number of lower level functions and examples.
+Foundation for games or simulations in Java. Provides a number of lower level functions and examples.
 
 * Windowing, image and font loading
 * Scaling to window
