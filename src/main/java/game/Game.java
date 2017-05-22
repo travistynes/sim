@@ -57,11 +57,11 @@ public class Game {
         WINDOW = new Window("sim", width, height);
         
         // Set world size.
-        WORLD_WIDTH = WINDOW.w * 10;
-        WORLD_HEIGHT = WINDOW.h * 10;
+        WORLD_WIDTH = WINDOW.w * 5;
+        WORLD_HEIGHT = WINDOW.h * 5;
         
         // Create background grid.
-        int num = 50;
+        int num = 25;
         for(int a = 0; a < num; a++) {
             for(int b = 0; b < num; b++) {
                 int w = WORLD_WIDTH / num;
@@ -88,24 +88,16 @@ public class Game {
             }
         }
         
-        // Create walls.
-        //WALLS.add(new Line2D.Double(0, 500, WORLD_WIDTH, 500));
+        // Create left, right walls.
+        WALLS.add(new Line2D.Double(0, 0, 0, WORLD_HEIGHT));
+        WALLS.add(new Line2D.Double(WORLD_WIDTH, 0, WORLD_WIDTH, WORLD_HEIGHT));
         
-        WALLS.add(new Line2D.Double(400, 500, 200, 450));
-        WALLS.add(new Line2D.Double(200, 500, 500, 450));
-        //WALLS.add(new Line2D.Double(520, 390, 1070, 50));
-        
-        WALLS.add(new Line2D.Double(800, 400, 850, 350));
-        WALLS.add(new Line2D.Double(850, 350, 900, 300));
-        WALLS.add(new Line2D.Double(900, 300, 950, 300));
-        WALLS.add(new Line2D.Double(950, 300, 1000, 350));
-        WALLS.add(new Line2D.Double(1000, 350, 1030, 410));
-        
+        // Create random ground line.
         int prevX = 0;
-        int prevY = 500;
-        for(int a = 0; a < 100; a++) {
-            int x1 = Game.ran(70) + 10 + prevX;
-            int y1 = Game.ran(40);
+        int prevY = WORLD_HEIGHT / 2;
+        for(int a = 0; a < WORLD_WIDTH; a++) {
+            int x1 = Game.ran(200) + 10 + prevX;
+            int y1 = Game.ran(30);
             double s = Game.ran();
             if(s <= .5) { y1 = -y1; } // Negative
             y1 += prevY;
@@ -114,10 +106,37 @@ public class Game {
             
             prevX = x1;
             prevY = y1;
+            
+            if(prevX >= WORLD_WIDTH) {
+                break;
+            }
         }
         
+        // Create random lines.
+        prevX = 0;
+        prevY = (WORLD_HEIGHT / 2) - 20;
+        for(int a = 0; a < WORLD_WIDTH; a++) {
+            int x1 = Game.ran(300) + 10 + prevX;
+            int y1 = Game.ran(30);
+            double s = Game.ran();
+            if(s <= .5) { y1 = -y1; } // Negative
+            y1 += prevY;
+            
+            if(Game.ran() >= .2) {
+                WALLS.add(new Line2D.Double(prevX, prevY, x1, y1));
+            }
+            
+            prevX = x1;
+            prevY = y1;
+            
+            if(prevX >= WORLD_WIDTH) {
+                break;
+            }
+        }
+        
+        // Create player.
         int playersize = 10;
-        PLAYER = new Player(0, 0, playersize, playersize);
+        PLAYER = new Player(0, (WORLD_HEIGHT / 2) - 100, playersize, playersize);
         
         // Create camera.
         CAMERA = new Camera(0, 0, WINDOW.w, WINDOW.h);        

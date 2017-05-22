@@ -16,7 +16,7 @@ public abstract class Actor {
     // Horizontal movement variables
     private double xRotation = MathHelper.PiOver2; // Initial 90 degrees - No horizontal movement.
     private double xRotationSpeed = (Math.PI / 180) * 6;
-    private double xSpeed = 4;
+    private double xSpeed = 7;
     
     // Vertical movement variables
     private double yRotation = Math.PI; // Initial 180 degress - No vertical movement.
