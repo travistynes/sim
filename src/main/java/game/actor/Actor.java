@@ -23,6 +23,7 @@ public abstract class Actor {
     private double yRotationSpeed = (Math.PI / 180) * 6;
     private double ySpeed = 10;
     private boolean jumping = false;
+    private double steepAngle = MathHelper.degree * 25; // Degress +/- from PI / 2 that constitutes a steep angle.
     
     public Actor(int x, int y, int w, int h) {
         this.x = x;
@@ -79,23 +80,9 @@ public abstract class Actor {
                 // Reset position.
                 this.x = curX;
                 
-                /*
-                Treat the line as though the left most point were at the origin so we can
-                get the angle of the line. If the left point is p1 and the right point is p2,
-                the formula is normally (x2 - x1, y2 - y1), but note for y we subtract y1 - y2
-                because y increases downward on our canvas.
-                */
-                Point2D p2 = null;
-                if(line.getX2() >= line.getX1()) {
-                    p2 = new Point2D.Double(line.getX2() - line.getX1(), line.getY1() - line.getY2());
-                } else {
-                    p2 = new Point2D.Double(line.getX1() - line.getX2(), line.getY2() - line.getY1());
-                }
+                double theta = MathHelper.lineAngle(line);
                 
-                // Get the angle of the line.
-                double theta = Math.atan2(p2.getY(), p2.getX());
-                
-                if(Math.abs(theta) > 3 * MathHelper.PiOver8 && Math.abs(theta) < 5 * MathHelper.PiOver8) {
+                if(Math.abs(theta) > MathHelper.PiOver2 - steepAngle && Math.abs(theta) < MathHelper.PiOver2 + steepAngle) {
                     // Angle is too steep to climb.
                     this.xRotation = MathHelper.PiOver2; // Reset horizontal momentum.
                 } else {
@@ -159,16 +146,44 @@ public abstract class Actor {
         // Move on y.
         this.y -= Math.sin(this.yRotation) * this.ySpeed;
         
-        // If there was a collision with a wall, reset position.
+        // Check for collision.
         for(Line2D line : Game.WALLS) {
             if(line.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
                 if(curY < this.y) {
                     // Ground collision.
                     this.jumping = false;
+                    
+                    // Reset position on y.
+                    this.y = curY;
+                    
+                    // Slide down slope, if too steep. Get the angle of the line we've landed on.
+                    double theta = MathHelper.lineAngle(line);
+
+                    if(Math.abs(theta) > MathHelper.PiOver2 - steepAngle && Math.abs(theta) < MathHelper.PiOver2 + steepAngle) {
+                        // Angle is too steep. Slide down it.
+                        this.x -= Math.cos(theta) * this.ySpeed * (theta / Math.abs(theta));
+                        this.y += Math.abs(Math.sin(theta)) * this.ySpeed;
+
+                        // Check for *another* wall collision after the above movement.
+                        for(Line2D line1 : Game.WALLS) {
+                            if(line1.intersectsLine(p.getX(), p.getY(), this.getCenterX(), this.getCenterY())) {
+                                // Reset position.
+                                this.x = curX;
+                                this.y = curY;
+                                this.yRotation = Math.PI; // Reset vertical momentum.
+                                
+                                break;
+                            }
+                        }
+                    } else {
+                        // Angle is not too steep.
+                        this.yRotation = Math.PI; // Reset vertical momentum.
+                    }
+                } else {
+                    // Not a ground collision. Reset y position and reset vertical momentum.
+                    this.y = curY;
+                    this.yRotation = Math.PI;
                 }
-                
-                this.y = curY;
-                this.yRotation = Math.PI;
                 
                 break;
             }

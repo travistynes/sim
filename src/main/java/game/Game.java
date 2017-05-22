@@ -134,6 +134,11 @@ public class Game {
             }
         }
         
+        // Steep angle slide demonstration.
+        WALLS.add(new Line2D.Double(200, (WORLD_HEIGHT / 2) - 40, 650, (WORLD_HEIGHT / 2) - 500));
+        WALLS.add(new Line2D.Double(650, (WORLD_HEIGHT / 2) - 500, 750, (WORLD_HEIGHT / 2) - 500));
+        WALLS.add(new Line2D.Double(750, (WORLD_HEIGHT / 2) - 500, 950, (WORLD_HEIGHT / 2) - 40));
+        
         // Create player.
         int playersize = 10;
         PLAYER = new Player(0, (WORLD_HEIGHT / 2) - 100, playersize, playersize);
