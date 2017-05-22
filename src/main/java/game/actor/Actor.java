@@ -103,23 +103,28 @@ public abstract class Actor {
                     this.x += Math.cos(theta) * Math.cos(this.xRotation) * this.xSpeed;
                     
                     /*
-                    There are subtle aspects that we need to consider when moving in y. Here is the explanation:
-                    We shouldn't need to move by the absolute value of the sin of the angle of the line. When we are moving to the right up
-                    a slope, that slope has a positive angle, and because we are moving right, we're factoring in the positive cosine of our
-                    x rotation. In this case, we move up.
+                    There are subtle aspects that we need to consider when moving in y. This explanation is mostly
+                    to do with why we move by the absolute value of the sine of the angle of the line * x rotation cosine.
                     
-                    When we're moving left up a slope, the slope has a negative angle, but since we are moving left, we factor in the negative
-                    cosine of our x rotation and the final result is positive; again, we move up.
+                    We don't need to move by the absolute value of the sine of the angle of the line. When we are
+                    moving to the right up a slope, the slope has a positive angle, and because we are moving right,
+                    we're factoring in the positive cosine of our x rotation. In this case, we move up.
                     
-                    This works, mathematically, and for the most part it works in practice. But there is a tricky situation that can arise which
-                    breaks down the movement: The player can periodically end up at exactly the right position on x, y at a join point of two lines.
-                    Imagine moving leftward up the slope and endup up at nearly that exact point. The next movement left
-                    (negative cosine of our x rotation) will intersect the downward slope (positive angle) and we end up trying to move down on y,
-                    instead of up. Since the downward movement results in an intersection with the ground, the position is reset, and we're stuck.
+                    When we're moving left up a slope, the slope has a negative angle, but since we are moving left,
+                    we factor in the negative cosine of our x rotation and the final result is positive.
+                    Again, we move up.
                     
-                    The fix is to always move up. This works because even if we're colliding from underneath a slope, we just fail the intersection test
-                    and reset the position. We add the additional 1 movement upward to "clear" the tops of slopes and prevent intersecting the other
-                    side, just to be safe.
+                    This works mathematically, and for the most part it works in practice. But there is a tricky situation
+                    that can arise which breaks down the movement: The player can periodically end up at exactly the
+                    right position on x, y at a join point of two lines. Imagine moving leftward up the slope and
+                    ending up right at that point. The next movement left (negative cosine of our x rotation) will
+                    intersect the downward slope (positive angle) and we end up trying to move down on y, instead of up.
+                    Since the downward movement results in an intersection with the ground, the position is reset,
+                    and we're stuck.
+                    
+                    The fix is to always move up. This works because even if we're colliding from underneath a slope,
+                    we just fail the intersection test and reset the position. We add the additional 1 movement upward
+                    to "clear" the tops of slopes and prevent intersecting the other side, just to be safe.
                     */
                     this.y -= Math.abs(Math.sin(theta) * Math.cos(this.xRotation) * this.xSpeed) + 1;
 
