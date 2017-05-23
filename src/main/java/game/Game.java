@@ -8,8 +8,6 @@ import game.camera.Camera;
 import game.actor.Player;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.Line2D;
 import java.util.List;
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class Game {
      */
     static {
         try {
-            
+            //System.getProperties().list(System.out);
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
