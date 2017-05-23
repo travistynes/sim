@@ -3,6 +3,11 @@ apply plugin: "application" // Use with 'gradle run' to compile and run applicat
 apply plugin: "distribution" // Use with 'gradle distZip'
 mainClassName = "game.Game"
 
+// Pass system properties to the jvm.
+run {
+    systemProperty "sun.java2d.opengl", "True" // Enable OpenGL pipeline.
+}
+
 version = "0.1"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
