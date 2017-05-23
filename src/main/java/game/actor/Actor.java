@@ -160,9 +160,11 @@ public abstract class Actor {
                     double theta = MathHelper.lineAngle(line);
 
                     if(Math.abs(theta) > MathHelper.PiOver2 - steepAngle && Math.abs(theta) < MathHelper.PiOver2 + steepAngle) {
-                        // Angle is too steep. Slide down it.
+                        // Angle is too steep.
+                        
+                        // Slide down slope.
                         this.x -= Math.cos(theta) * this.ySpeed * (theta / Math.abs(theta));
-                        this.y += Math.abs(Math.sin(theta)) * this.ySpeed;
+                        this.y += Math.abs(Math.sin(theta)) * Math.abs(Math.sin(this.yRotation)) * this.ySpeed;
 
                         // Check for *another* wall collision after the above movement.
                         for(Line2D line1 : Game.WALLS) {
