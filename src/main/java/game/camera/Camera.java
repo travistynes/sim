@@ -62,10 +62,21 @@ public class Camera extends Rectangle {
             return;
         }
         
-        double diffX = this.target.getCenterX() - this.getCenterX();
-        double diffY = this.target.getCenterY() - this.getCenterY();
-        
-        this.translate((int)(diffX * this.trackFactor), (int)(diffY * this.trackFactor));
+        // Snap to the target if it is outside of the view.
+        if(!this.target.getRect().intersects(this)) {
+            // Snap to target.
+            Actor t = this.target;
+            this.x = (int)(t.getCenterX() - (this.width / 2));
+            this.y = (int)(t.getCenterY() - (this.height / 2));
+        } else {
+            // Ease to target.
+            
+            // Get offset from target.
+            double diffX = this.target.getCenterX() - this.getCenterX();
+            double diffY = this.target.getCenterY() - this.getCenterY();
+
+            this.translate((int)(diffX * this.trackFactor), (int)(diffY * this.trackFactor));
+        }
     }
     
     private void checkBounds() {
